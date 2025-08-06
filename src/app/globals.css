@@ -1,26 +1,223 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    /* Luxurious pearl white with subtle warmth */
+    --background: 25 25% 97.5%;
+    --foreground: 240 19% 16%;
+    --card: 25 25% 97.5%;
+    --card-foreground: 240 19% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 19% 16%;
+    
+    /* Stunning gradient-inspired primary - electric blue to purple */
+    --primary: 250 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Soft lavender secondary */
+    --secondary: 270 20% 94%;
+    --secondary-foreground: 240 19% 16%;
+    
+    /* Sophisticated muted with purple undertones */
+    --muted: 270 20% 94%;
+    --muted-foreground: 240 10% 50%;
+    
+    /* Elegant accent with subtle color */
+    --accent: 320 30% 92%;
+    --accent-foreground: 240 19% 16%;
+    
+    /* Modern coral-red destructive */
+    --destructive: 350 85% 62%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Refined borders with subtle color */
+    --border: 270 15% 88%;
+    --input: 270 15% 88%;
+    --ring: 250 100% 65%;
+    --radius: 1rem;
+    
+    /* Instagram-worthy vibrant chart colors */
+    --chart-1: 330 85% 65%; /* Hot pink */
+    --chart-2: 195 100% 60%; /* Cyan blue */
+    --chart-3: 280 100% 70%; /* Electric purple */
+    --chart-4: 45 100% 65%;  /* Sunset orange */
+    --chart-5: 160 85% 55%;  /* Emerald green */
+    
+    /* Bonus gradient variables for extra flair */
+    --gradient-primary: linear-gradient(135deg, hsl(250 100% 65%) 0%, hsl(280 100% 70%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(195 100% 60%) 0%, hsl(160 85% 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(330 85% 65%) 0%, hsl(45 100% 65%) 100%);
+    --gradient-background: radial-gradient(ellipse at top, hsl(270 20% 94%) 0%, hsl(25 25% 97.5%) 50%);
+    
+    /* Glassmorphism support */
+    --glass-bg: hsla(270, 20%, 94%, 0.8);
+    --glass-border: hsla(270, 15%, 88%, 0.3);
+    
+    /* Shadow system for depth */
+    --shadow-sm: 0 1px 2px hsla(250, 100%, 65%, 0.1);
+    --shadow-md: 0 4px 12px hsla(250, 100%, 65%, 0.15);
+    --shadow-lg: 0 8px 25px hsla(250, 100%, 65%, 0.2);
+    --shadow-xl: 0 12px 35px hsla(250, 100%, 65%, 0.25);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.fade-layer {
+  mask-image: linear-gradient(to top,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1) 20%,
+      rgba(0, 0, 0, 1) 80%,
+      rgba(0, 0, 0, 0));
+}
+
+.fade-layer--side {
+  mask-image: linear-gradient(to left, Orgba(0, ø, 0, 0), Orgba(0, 0, 0, 1) 20%);
+}
+
+.text-radial {
+  background-image: radial-gradient(ellipse farthest-side,
+      Orgba(115, 32, 221, 0.2) 20%,
+      transparent 85%);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.snippet--gradient {
+  background-image: linear-gradient(to botton,
+      rgba(0, 0, 0, 0),
+      rgba(23, 23, 23, 1));
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+      /* Rich dark background with subtle color */
+      --background: 240 15% 8%;
+      --foreground: 270 20% 95%;
+      --card: 240 15% 10%;
+      --card-foreground: 270 20% 95%;
+      --popover: 240 15% 8%;
+      --popover-foreground: 270 20% 95%;
+      
+      /* Glowing neon primary */
+      --primary: 250 100% 70%;
+      --primary-foreground: 240 15% 8%;
+      
+      /* Dark purple secondary */
+      --secondary: 250 15% 18%;
+      --secondary-foreground: 270 20% 95%;
+      
+      /* Sophisticated dark muted */
+      --muted: 250 15% 18%;
+      --muted-foreground: 270 10% 65%;
+      
+      /* Dark accent with neon edge */
+      --accent: 280 20% 22%;
+      --accent-foreground: 270 20% 95%;
+      
+      /* Vibrant coral destructive */
+      --destructive: 350 90% 65%;
+      --destructive-foreground: 240 15% 8%;
+      
+      /* Dark borders */
+      --border: 250 15% 20%;
+      --input: 250 15% 20%;
+      --ring: 250 100% 70%;
+      
+      /* Enhanced chart colors for dark mode */
+      --chart-1: 330 90% 70%; /* Brighter hot pink */
+      --chart-2: 195 100% 65%; /* Brighter cyan */
+      --chart-3: 280 100% 75%; /* Glowing purple */
+      --chart-4: 45 100% 70%;  /* Brighter orange */
+      --chart-5: 160 90% 60%;  /* Brighter emerald */
+      
+      /* Dark mode gradients */
+      --gradient-primary: linear-gradient(135deg, hsl(250 100% 70%) 0%, hsl(280 100% 75%) 100%);
+      --gradient-secondary: linear-gradient(135deg, hsl(195 100% 65%) 0%, hsl(160 90% 60%) 100%);
+      --gradient-accent: linear-gradient(135deg, hsl(330 90% 70%) 0%, hsl(45 100% 70%) 100%);
+      --gradient-background: radial-gradient(ellipse at top, hsl(250 15% 18%) 0%, hsl(240 15% 8%) 50%);
+      
+      /* Dark glassmorphism */
+      --glass-bg: hsla(250, 15%, 18%, 0.8);
+      --glass-border: hsla(250, 15%, 20%, 0.3);
+      
+      /* Glowing shadows for dark mode */
+      --shadow-sm: 0 1px 2px hsla(250, 100%, 70%, 0.2);
+      --shadow-md: 0 4px 12px hsla(250, 100%, 70%, 0.25);
+      --shadow-lg: 0 8px 25px hsla(250, 100%, 70%, 0.3);
+      --shadow-xl: 0 12px 35px hsla(250, 100%, 70%, 0.4);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Bonus utility classes for maximum visual impact */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-bg {
+  background: var(--gradient-background);
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.neon-glow {
+  box-shadow: 0 0 20px hsla(250, 100%, 65%, 0.5);
+}
+
+.pulse-animation {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+      opacity: 1;
+  }
+  50% {
+      opacity: .7;
+  }
 }
