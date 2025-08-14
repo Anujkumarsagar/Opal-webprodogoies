@@ -1,6 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isProtectedRoute = createRouteMatcher([
+  '/auth/callback(.*)', // Ensure this line is included to protect the auth callback route,
+  '/auth/sign-in(.*)',
+  '/auth/sign-up(.*)',
   '/dashboard(.*)',
   '/payment(.*)',
   '/api/payment',

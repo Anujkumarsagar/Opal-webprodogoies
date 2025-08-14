@@ -51,7 +51,7 @@ const workspaceLayout = async ({
     <HydrationBoundary state={dehydrate(queryClient)}>
        {/* //it gives the accessing power for access the query */}
       <div>
-        <Sidebar actionWorkspaceId={workspaceId} />
+        <Sidebar activeWorkspaceId={workspaceId} />
         {/* {children} */}
       </div>
     </HydrationBoundary>

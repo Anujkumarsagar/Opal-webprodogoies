@@ -44,7 +44,7 @@ export const onAuthenticateUser = async () => {
                 subscription: {
                     create: {
                         customerId: user.id,
-                       
+
                     }
                 },
                 workspace: {
@@ -78,45 +78,85 @@ export const onAuthenticateUser = async () => {
 }
 
 export const getNotification = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) {
+      return {
+        status: 403,
+        data: { notifications: [], count: 0 }
+      };
+    }
 
-    try{
-        const  user = await currentUser();
-        if (!user) {
-            return {
-                status: 403,
-                data: []
-            };
-        }
-        const notification = await client.user.findUnique({
-            where:{
-                clerkid: user.id
+    const notification = await client.user.findUnique({
+      where: { clerkid: user.id },
+      select: {
+        notificaion: true,
+        _count: { select: { notificaion: true } }
+      }
+    });
+
+    return {
+      status: 200,
+      data: {
+        notifications: notification?.notificaion || [],
+        count: notification?._count?.notificaion || 0
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching user notifications:", error);
+    return {
+      status: 500,
+      data: { notifications: [], count: 0 }
+    };
+  }
+};
+
+
+export const searchUsers = async (query: string) => {
+    try {
+        const user = await currentUser();
+        if (!user) return { status: 404 }
+
+        const workspace = await client.user.findMany({
+            where: {
+                OR: [
+                    { firstname: { contains: query } },
+                    { lastname: { contains: query } },
+                    { email: { contains: query } }
+
+                ],
+                NOT: [{ clerkid: user.id }]
             },
-            select:{
-                notificaion: true,
-                _count:{
+            select: {
+                id: true,
+                subscription: {
                     select: {
-                        notificaion: true
+                        plan: true
                     }
-                }
+                },
+                firstname: true,
+                lastname: true,
+                image: true,
+                email: true
             }
         })
 
-        if(notification && notification._count.notificaion > 0){
+        if (workspace && workspace.length > 0) {
             return {
                 status: 200,
-                data: notification
-            };
+                data: workspace
+            }
         }
 
         return {
             status: 404,
-            data: []
-        };
-    }catch (error) {    
-        console.error("Error fetching user notifications:", error);
+            data: undefined
+        }
+    } catch (error) {
+        console.error("Error searching workspace:", error);
         return {
             status: 500,
-            data: []
+            data: undefined
         };
     }
 }
