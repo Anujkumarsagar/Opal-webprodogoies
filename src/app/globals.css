@@ -11,56 +11,65 @@
     --card-foreground: 240 19% 16%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 19% 16%;
-    
+    --cell-size: 2rem;
+    /* if spacing(8) = 2rem */
+
+
     /* Stunning gradient-inspired primary - electric blue to purple */
     --primary: 250 100% 65%;
     --primary-foreground: 0 0% 100%;
-    
+
     /* Soft lavender secondary */
     --secondary: 270 20% 94%;
     --secondary-foreground: 240 19% 16%;
-    
+
     /* Sophisticated muted with purple undertones */
     --muted: 270 20% 94%;
     --muted-foreground: 240 10% 50%;
-    
+
     /* Elegant accent with subtle color */
     --accent: 320 30% 92%;
     --accent-foreground: 240 19% 16%;
-    
+
+
     /* Modern coral-red destructive */
     --destructive: 350 85% 62%;
     --destructive-foreground: 0 0% 100%;
-    
+
     /* Refined borders with subtle color */
     --border: 270 15% 88%;
     --input: 270 15% 88%;
     --ring: 250 100% 65%;
     --radius: 1rem;
-    
+
     /* Instagram-worthy vibrant chart colors */
-    --chart-1: 330 85% 65%; /* Hot pink */
-    --chart-2: 195 100% 60%; /* Cyan blue */
-    --chart-3: 280 100% 70%; /* Electric purple */
-    --chart-4: 45 100% 65%;  /* Sunset orange */
-    --chart-5: 160 85% 55%;  /* Emerald green */
-    
+    --chart-1: 330 85% 65%;
+    /* Hot pink */
+    --chart-2: 195 100% 60%;
+    /* Cyan blue */
+    --chart-3: 280 100% 70%;
+    /* Electric purple */
+    --chart-4: 45 100% 65%;
+    /* Sunset orange */
+    --chart-5: 160 85% 55%;
+    /* Emerald green */
+
     /* Bonus gradient variables for extra flair */
     --gradient-primary: linear-gradient(135deg, hsl(250 100% 65%) 0%, hsl(280 100% 70%) 100%);
     --gradient-secondary: linear-gradient(135deg, hsl(195 100% 60%) 0%, hsl(160 85% 55%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(330 85% 65%) 0%, hsl(45 100% 65%) 100%);
     --gradient-background: radial-gradient(ellipse at top, hsl(270 20% 94%) 0%, hsl(25 25% 97.5%) 50%);
-    
+
     /* Glassmorphism support */
     --glass-bg: hsla(270, 20%, 94%, 0.8);
     --glass-border: hsla(270, 15%, 88%, 0.3);
-    
+
     /* Shadow system for depth */
     --shadow-sm: 0 1px 2px hsla(250, 100%, 65%, 0.1);
     --shadow-md: 0 4px 12px hsla(250, 100%, 65%, 0.15);
     --shadow-lg: 0 8px 25px hsla(250, 100%, 65%, 0.2);
     --shadow-xl: 0 12px 35px hsla(250, 100%, 65%, 0.25);
-}
+  }
 
   .dark {
     --background: 0 0% 3.9%;
@@ -100,6 +109,52 @@
   }
 }
 
+
+
+* {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: hsl(250, 100%, 65%) transparent;
+  /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  /* width of the vertical scrollbar */
+  height: 8px;
+  /* height of horizontal scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  /* track color */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: hsl(250, 100%, 65%);
+  /* thumb color */
+  border-radius: 10px;
+}
+
+/* optional on-hover effect */
+*::-webkit-scrollbar-thumb:hover {
+  background: hsl(250, 100%, 55%);
+}
+
+
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
 .fade-layer {
   mask-image: linear-gradient(to top,
       rgba(0, 0, 0, 0),
@@ -129,61 +184,66 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-      /* Rich dark background with subtle color */
-      --background: 240 15% 8%;
-      --foreground: 270 20% 95%;
-      --card: 240 15% 10%;
-      --card-foreground: 270 20% 95%;
-      --popover: 240 15% 8%;
-      --popover-foreground: 270 20% 95%;
-      
-      /* Glowing neon primary */
-      --primary: 250 100% 70%;
-      --primary-foreground: 240 15% 8%;
-      
-      /* Dark purple secondary */
-      --secondary: 250 15% 18%;
-      --secondary-foreground: 270 20% 95%;
-      
-      /* Sophisticated dark muted */
-      --muted: 250 15% 18%;
-      --muted-foreground: 270 10% 65%;
-      
-      /* Dark accent with neon edge */
-      --accent: 280 20% 22%;
-      --accent-foreground: 270 20% 95%;
-      
-      /* Vibrant coral destructive */
-      --destructive: 350 90% 65%;
-      --destructive-foreground: 240 15% 8%;
-      
-      /* Dark borders */
-      --border: 250 15% 20%;
-      --input: 250 15% 20%;
-      --ring: 250 100% 70%;
-      
-      /* Enhanced chart colors for dark mode */
-      --chart-1: 330 90% 70%; /* Brighter hot pink */
-      --chart-2: 195 100% 65%; /* Brighter cyan */
-      --chart-3: 280 100% 75%; /* Glowing purple */
-      --chart-4: 45 100% 70%;  /* Brighter orange */
-      --chart-5: 160 90% 60%;  /* Brighter emerald */
-      
-      /* Dark mode gradients */
-      --gradient-primary: linear-gradient(135deg, hsl(250 100% 70%) 0%, hsl(280 100% 75%) 100%);
-      --gradient-secondary: linear-gradient(135deg, hsl(195 100% 65%) 0%, hsl(160 90% 60%) 100%);
-      --gradient-accent: linear-gradient(135deg, hsl(330 90% 70%) 0%, hsl(45 100% 70%) 100%);
-      --gradient-background: radial-gradient(ellipse at top, hsl(250 15% 18%) 0%, hsl(240 15% 8%) 50%);
-      
-      /* Dark glassmorphism */
-      --glass-bg: hsla(250, 15%, 18%, 0.8);
-      --glass-border: hsla(250, 15%, 20%, 0.3);
-      
-      /* Glowing shadows for dark mode */
-      --shadow-sm: 0 1px 2px hsla(250, 100%, 70%, 0.2);
-      --shadow-md: 0 4px 12px hsla(250, 100%, 70%, 0.25);
-      --shadow-lg: 0 8px 25px hsla(250, 100%, 70%, 0.3);
-      --shadow-xl: 0 12px 35px hsla(250, 100%, 70%, 0.4);
+    /* Rich dark background with subtle color */
+    --background: 240 15% 8%;
+    --foreground: 270 20% 95%;
+    --card: 240 15% 10%;
+    --card-foreground: 270 20% 95%;
+    --popover: 240 15% 8%;
+    --popover-foreground: 270 20% 95%;
+
+    /* Glowing neon primary */
+    --primary: 250 100% 70%;
+    --primary-foreground: 240 15% 8%;
+
+    /* Dark purple secondary */
+    --secondary: 250 15% 18%;
+    --secondary-foreground: 270 20% 95%;
+
+    /* Sophisticated dark muted */
+    --muted: 250 15% 18%;
+    --muted-foreground: 270 10% 65%;
+
+    /* Dark accent with neon edge */
+    --accent: 280 20% 22%;
+    --accent-foreground: 270 20% 95%;
+
+    /* Vibrant coral destructive */
+    --destructive: 350 90% 65%;
+    --destructive-foreground: 240 15% 8%;
+
+    /* Dark borders */
+    --border: 250 15% 20%;
+    --input: 250 15% 20%;
+    --ring: 250 100% 70%;
+
+    /* Enhanced chart colors for dark mode */
+    --chart-1: 330 90% 70%;
+    /* Brighter hot pink */
+    --chart-2: 195 100% 65%;
+    /* Brighter cyan */
+    --chart-3: 280 100% 75%;
+    /* Glowing purple */
+    --chart-4: 45 100% 70%;
+    /* Brighter orange */
+    --chart-5: 160 90% 60%;
+    /* Brighter emerald */
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(250 100% 70%) 0%, hsl(280 100% 75%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(195 100% 65%) 0%, hsl(160 90% 60%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(330 90% 70%) 0%, hsl(45 100% 70%) 100%);
+    --gradient-background: radial-gradient(ellipse at top, hsl(250 15% 18%) 0%, hsl(240 15% 8%) 50%);
+
+    /* Dark glassmorphism */
+    --glass-bg: hsla(250, 15%, 18%, 0.8);
+    --glass-border: hsla(250, 15%, 20%, 0.3);
+
+    /* Glowing shadows for dark mode */
+    --shadow-sm: 0 1px 2px hsla(250, 100%, 70%, 0.2);
+    --shadow-md: 0 4px 12px hsla(250, 100%, 70%, 0.25);
+    --shadow-lg: 0 8px 25px hsla(250, 100%, 70%, 0.3);
+    --shadow-xl: 0 12px 35px hsla(250, 100%, 70%, 0.4);
   }
 }
 
@@ -214,10 +274,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
-      opacity: 1;
+
+  0%,
+  100% {
+    opacity: 1;
   }
+
   50% {
-      opacity: .7;
+    opacity: .7;
   }
 }

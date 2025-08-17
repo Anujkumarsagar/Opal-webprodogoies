@@ -11,7 +11,7 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { userQueryData } from "@/hooks/userQueryData";
+
 import { NotificationsProps, WorkspaceProps } from "@/types/index.type";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
@@ -26,6 +26,8 @@ import GlobalCard from "../global-card";
 import { Button } from "@/components/ui/button";
 import Loader from "../loader";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import InfoBar from "../info-bar";
+import { useQueryData } from "@/hooks/userQueryData";
 
 type Props = {
     activeWorkspaceId: string;
@@ -38,13 +40,13 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
     const pathName = usePathname();
 
     // Fetch Workspaces
-    const { data: workspacesData, isFetched } = userQueryData(
+    const { data: workspacesData, isFetched } = useQueryData(
         ["user-workspaces"],
         getWorkSpaces
     );
 
     // Fetch Notifications
-    const { data: notificationsData } = userQueryData(
+    const { data: notificationsData } = useQueryData(
         ["user-notifications"],
         getNotification
     );
@@ -219,7 +221,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
             >
 
                 <Button className="tex-sm w-full mx-auto mt-2">
-                    <Loader> Ugrade </Loader>
+                    <Loader className="#000" state={false}> Ugrade </Loader>
                 </Button>
             </GlobalCard>}
         </div>
@@ -227,6 +229,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
 
     return (
         <div>
+            <InfoBar />
             {/* Mobile View */}
             <div className="md:hidden fixed top-4 left-4 z-50">
                 <Sheet>
@@ -251,7 +254,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
             </div>
 
             {/* Desktop View */}
-            <div className="hidden md:block">{SidebarSection}</div>
+            <div className="h-full hidden md:block">{SidebarSection}</div>
         </div>
     );
 }

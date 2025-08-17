@@ -1,7 +1,8 @@
 "use server";
 
 import { client } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { stat } from "fs";
 
 export async function verifyAccessToWorkspace(workspaceId: string) {
   try {
@@ -165,6 +166,7 @@ export const getWorkSpaces = async () => {
           },
         },
         workspace: {
+
           select: {
             id: true,
             name: true,
@@ -204,3 +206,93 @@ export const getWorkSpaces = async () => {
   }
 }
 
+
+
+export const CreateWorkspace = async (name: string) => {
+  try {
+
+    const user = await currentUser();
+    if (!user) return { status: 403, data: null };
+    const authorized = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        subscription: {
+          select: {
+            plan: true
+          }
+        }
+      }
+    })
+
+    if (authorized?.subscription?.plan !== 'PRO') {
+      const workspace = await client.user.update({
+        where: {
+          clerkid: user.id,
+
+        },
+        data: {
+          workspace: {
+            create: {
+              name, type: 'PUBLIC'
+            }
+          }
+        }
+      })
+
+
+      if (workspace) {
+        return { status: 200, data: 'Workspace Created' };
+      }
+    }
+
+
+    return {
+      status: 403,
+      data: null,
+      error: "You are not authorized to create a workspace"
+    }
+
+  } catch (error) {
+    console.error("Error creating workspace:", error);
+    return {
+      status: 500,
+      data: null,
+      error: error
+    };
+  }
+}
+
+
+
+export const renameFolders = async (folderId: string, name: string) => {
+
+  try {
+    const folder = await client.folder.update({
+      where: {
+        id: folderId
+      },
+      data: {
+        name: name
+      }
+    })
+
+    if (folder) {
+      return {
+        status: 200,
+        data: folder
+      }
+    }
+    return {
+      status: 404,
+      data: null,
+      error: "Folder not found"
+    }
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+    }
+  }
+}

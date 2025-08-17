@@ -4,6 +4,7 @@ import { verifyAccessToWorkspace, getWorkspaceFolders, getAllUserVideos, getWork
 import { redirect } from "next/navigation";
 import { QueryClient, HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import Sidebar from "@/components/global/sidebar";
+import GlobalHeader from "@/components/global/global-header";
 
 
 type Props = {
@@ -49,10 +50,14 @@ const workspaceLayout = async ({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-       {/* //it gives the accessing power for access the query */}
-      <div>
+      <div className="flex">
         <Sidebar activeWorkspaceId={workspaceId} />
-        {/* {children} */}
+        <div className=" w-full pt-28 p-6 overflow-y-scroll overflow-x-hidden ">
+          <GlobalHeader workspace={hasAccess.data.workspace} />
+          <div className="mt-4">
+            {children}
+          </div>
+        </div>
       </div>
     </HydrationBoundary>
   );
