@@ -1,15 +1,48 @@
+"use client"
+
 import { cn } from '@/lib/utils'
 import { ArrowRight, FolderIcon } from 'lucide-react'
 import React from 'react'
 import Folder from './folder'
+import { useQueryData } from '@/hooks/userQueryData'
+import { getWorkspaceFolders } from '@/app/actions/workspace'
+import { useMutationDataState } from '@/hooks/useMutationData'
 
 type Props = {
     workspaceId: string
 }
 
-const Folders = (props: Props) => {
+export type FolderProps = {
+    status: number
+    data: ({
+        _count: {
+            videos: number
+        }
+    } & {
+        id: string
+        name: string
+        createdAt: Date
+        workSpaceId: string | null
+    }[]
+
+    )
+}
+
+const Folders = ({ workspaceId }: Props) => {
 
     //get folders
+
+    const { data, isFetched } = useQueryData(['workspace-folders'], () => getWorkspaceFolders(workspaceId))
+
+    const { latestVariables } = useMutationDataState(['create-folder'])
+ 
+    const { status, data: folders } = data as FolderProps
+
+
+    // if (isFetched && folders) {
+
+    // }
+
     //optimistic variable = 
     return <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-between'>
@@ -23,9 +56,31 @@ const Folders = (props: Props) => {
             </div>
 
         </div>
-        <section className={cn('flex items-center gap-4 overflow-x-auto w-full  scrollbar-none')}>
+        <section className={cn(status !== 200 && 'justify-center', 'flex items-center gap-4 overflow-x-auto w-full  scrollbar-none')}>
 
-            <Folder id='fa' name='folder Title' />
+            {status !== 200 ? <p className='text-neutral-300'>No folder in workspace</p> : (
+                <>{latestVariables && latestVariables.status === 'pending' && (
+                    <Folder
+                        name={latestVariables.variables.name}
+                        id={latestVariables.variables.id}
+                        optimstic
+                    />
+                )}
+
+
+                    {folders.map((folder) => (
+                        <Folder
+                            name={
+                                
+                                folder.name}
+                            count={folder._count.videos}
+                            id={folder.id}
+                            key={folder.id}
+                        />
+                    ))}
+                </>
+            )}
+
         </section>
     </div>
 }

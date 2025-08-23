@@ -17,14 +17,14 @@ export const useMutationData = (mutationKey: MutationKey, mutationFn: MutationFu
                 description: data?.message
             })
         },
-        onSettled: async() => {
+        onSettled: async () => {
             return await client.invalidateQueries({
-                queryKey:[ queryKey]
+                queryKey: [queryKey]
             })
         },
     })
 
-    return { mutate, isPending}
+    return { mutate, isPending }
 }
 
 
@@ -32,8 +32,12 @@ export const useMutationData = (mutationKey: MutationKey, mutationFn: MutationFu
 
 
 export const useMutationDataState = (mutationKey: MutationKey) => {
+
+    // 2. Get Data for Specific Mutations using mutationKey
+    // You can observe mutation state by filtering with a specific mutationKey—handy for tracking a given type of mutation (e.g., all post creations):
+    
     const data = useMutationState({
-        filters:{
+        filters: {
             mutationKey
         },
         select: (mutation) => {

@@ -296,3 +296,98 @@ export const renameFolders = async (folderId: string, name: string) => {
     }
   }
 }
+
+
+
+
+export const createFolder = async (workspaceId: string) => {
+  try {
+    const isNewFolders = await client.workSpace.update({
+      where: {
+        id: workspaceId
+      },
+      data: {
+        folders: {
+          create: {
+            name: 'Untitled Folder'
+          }
+        }
+      }
+    })
+
+    if (isNewFolders) {
+      return {
+        status: 200,
+        message: "Folder created successfully",
+        data: isNewFolders
+      }
+    }
+
+    return {
+      status: 404,
+      message: "Failed to create folder",
+      data: null
+    }
+  } catch (error) {
+
+    return {
+      status: 500,
+      message: "Internal server error",
+      data: null
+    }
+  }
+}
+
+export const getFolderInfo = async (folderId: string) => {
+  try {
+    const folder = await client.folder.findUnique({
+      where: {
+        id: folderId
+      },
+      select: {
+        name: true,
+        _count: {
+          select: {
+            videos: true
+          }
+        }
+      }
+    })
+
+    if (folder) {
+      return {
+        status: 200,
+        data: folder
+      }
+    }
+
+    return {
+      status: 404,
+      data: null,
+      error: "Folder not found"
+    }
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+      error: "Internal server error"
+    }
+  }
+}
+
+export const moveVideoLocation = async (folderId: string, videoId: string, workspaceId: string) => {
+  try {
+    const location = await client.video.update({
+      where:{
+        id: videoId
+      },
+      data: {
+        folderId: folderId || null,
+        workSpaceId: workspaceId
+      
+      }
+    })
+  }catch(error){
+
+  }
+}

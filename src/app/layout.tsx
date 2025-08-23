@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import "./globals.css";
 import ReactQueryProvider from "@/react-query";
 import { Manrope } from "next/font/google";
+import { ReduxProvider } from "@/redux/provider";
+import { Toaster } from "sonner";
 
 type Props = {
     children: React.ReactNode;
@@ -22,20 +24,29 @@ export default function Layout({ children }: Props) {
     return (
         <html lang="en">
             <body className={`${manrope.className}`}>
-                <ClerkProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        disableTransitionOnChange
+                <ReduxProvider >
+                    <ClerkProvider
+                        publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+                        signInUrl="/auth/sign-in"
+                        signUpUrl="/auth/sign-up"
+                        afterSignInUrl="/dashboard"
+                        afterSignUpUrl="/dashboard"
+                        afterSignOutUrl="/"
                     >
-                        <ReactQueryProvider>
-                            {children}
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="dark"
+                            disableTransitionOnChange
+                        >
+                            <ReactQueryProvider>
+                                {children}
+                                <Toaster />
+                            </ReactQueryProvider>
 
-                        </ReactQueryProvider>
-
-                        {/* hellow */}
-                    </ThemeProvider>
-                </ClerkProvider>
+                            {/* hellow */}
+                        </ThemeProvider>
+                    </ClerkProvider>
+                </ReduxProvider>
             </body>
         </html>
     );
