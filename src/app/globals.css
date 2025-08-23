@@ -164,12 +164,12 @@
 }
 
 .fade-layer--side {
-  mask-image: linear-gradient(to left, Orgba(0, ø, 0, 0), Orgba(0, 0, 0, 1) 20%);
+  mask-image: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 20%);
 }
 
 .text-radial {
   background-image: radial-gradient(ellipse farthest-side,
-      Orgba(115, 32, 221, 0.2) 20%,
+      rgba(115, 32, 221, 0.2) 20%,
       transparent 85%);
   background-size: 100% 100%;
   background-position: center;
@@ -177,7 +177,7 @@
 }
 
 .snippet--gradient {
-  background-image: linear-gradient(to botton,
+  background-image: linear-gradient(to bottom,
       rgba(0, 0, 0, 0),
       rgba(23, 23, 23, 1));
 }
