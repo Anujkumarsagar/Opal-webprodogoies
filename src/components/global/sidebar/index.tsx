@@ -28,6 +28,8 @@ import Loader from "../loader";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import InfoBar from "../info-bar";
 import { useQueryData } from "@/hooks/userQueryData";
+import { useDispatch } from "react-redux";
+import { WORKSPACES } from "@/redux/slices/workspaces";
 
 type Props = {
     activeWorkspaceId: string;
@@ -38,6 +40,7 @@ type Props = {
 const Sidebar = ({ activeWorkspaceId }: Props) => {
     const router = useRouter();
     const pathName = usePathname();
+    const dispatch = useDispatch()
 
     // Fetch Workspaces
     const { data: workspacesData, isFetched } = useQueryData(
@@ -73,6 +76,11 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         router.push(`/dashboard/${value}`);
     };
 
+    if(isFetched && workspace){
+        dispatch(WORKSPACES({workspaces: workspace.workspace}))
+    }
+    
+
     if (!isFetched) {
         return (
             <div className="bg-[#111111] p-4 h-full w-[250px] flex items-center justify-center">
@@ -82,8 +90,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
     }
 
     const SidebarSection = (
-        <div className="bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center  ">
-            {/* Header */}
+        <div className="bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-y-scroll overflow-x-hidden ">
             <div className="bg-[#111111] p-4 gap-2 justify-center items-center mb-4 absolute top-0 flex left-0 right-0">
                 Logo
                 <p className="text-2xl">Dost</p>

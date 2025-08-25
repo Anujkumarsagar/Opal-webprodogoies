@@ -43,49 +43,47 @@ export async function verifyAccessToWorkspace(workspaceId: string) {
     return {
       status: 400,
       data: {
-        workspace: null
+        workspace: null,
       },
-      error: error
-    }
+      error: error,
+    };
   }
 }
-
 
 export const getWorkspaceFolders = async (workSpaceId: string) => {
   try {
     const isFolders = await client.folder.findMany({
       where: {
-        workSpaceId
+        workSpaceId,
       },
       include: {
         _count: {
           select: {
             videos: true,
-          }
-        }
-      }
-    })
+          },
+        },
+      },
+    });
 
     if (isFolders && isFolders.length > 0) {
       return {
         status: 200,
-        data: isFolders
-      }
+        data: isFolders,
+      };
     }
 
     return {
       status: 404,
-      data: []
-    }
+      data: [],
+    };
   } catch (error) {
     console.error("Error fetching workspace folders:", error);
     return {
       status: 404,
-      data: []
-    }
+      data: [],
+    };
   }
-}
-
+};
 
 export const getAllUserVideos = async (workSpaceId: string) => {
   try {
@@ -93,12 +91,12 @@ export const getAllUserVideos = async (workSpaceId: string) => {
     if (!user) {
       return {
         status: 403,
-        data: []
+        data: [],
       };
     }
     const videos = await client.video.findMany({
       where: {
-        OR: [{ workSpaceId }, { folderId: workSpaceId }]
+        OR: [{ workSpaceId }, { folderId: workSpaceId }],
       },
       select: {
         id: true,
@@ -109,15 +107,15 @@ export const getAllUserVideos = async (workSpaceId: string) => {
         Folder: {
           select: {
             id: true,
-            name: true
-          }
+            name: true,
+          },
         },
         User: {
           select: {
             firstname: true,
             lastname: true,
-            image: true
-          }
+            image: true,
+          },
         },
       },
       orderBy: {
@@ -128,22 +126,22 @@ export const getAllUserVideos = async (workSpaceId: string) => {
     if (videos && videos.length > 0) {
       return {
         status: 200,
-        data: videos
+        data: videos,
       };
     }
 
     return {
       status: 404,
-      data: []
-    }
+      data: [],
+    };
   } catch (error) {
     console.error("Error fetching user videos:", error);
     return {
       status: 500,
-      data: []
+      data: [],
     };
   }
-}
+};
 
 export const getWorkSpaces = async () => {
   try {
@@ -151,13 +149,13 @@ export const getWorkSpaces = async () => {
     if (!user) {
       return {
         status: 403,
-        data: []
+        data: [],
       };
     }
 
     const workspaces = await client.user.findMany({
       where: {
-        clerkid: user.id
+        clerkid: user.id,
       },
       select: {
         subscription: {
@@ -166,12 +164,11 @@ export const getWorkSpaces = async () => {
           },
         },
         workspace: {
-
           select: {
             id: true,
             name: true,
             type: true,
-          }
+          },
         },
         members: {
           select: {
@@ -180,37 +177,34 @@ export const getWorkSpaces = async () => {
                 id: true,
                 name: true,
                 type: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
 
     if (workspaces) {
       return {
         status: 200,
-        data: workspaces
-      }
+        data: workspaces,
+      };
     }
     return {
       status: 404,
-      data: []
+      data: [],
     };
   } catch (error) {
     console.error("Error fetching user workspaces:", error);
     return {
       status: 500,
-      data: []
+      data: [],
     };
   }
-}
-
-
+};
 
 export const CreateWorkspace = async (name: string) => {
   try {
-
     const user = await currentUser();
     if (!user) return { status: 403, data: null };
     const authorized = await client.user.findUnique({
@@ -220,174 +214,182 @@ export const CreateWorkspace = async (name: string) => {
       select: {
         subscription: {
           select: {
-            plan: true
-          }
-        }
-      }
-    })
+            plan: true,
+          },
+        },
+      },
+    });
 
-    if (authorized?.subscription?.plan !== 'PRO') {
+    if (authorized?.subscription?.plan !== "PRO") {
       const workspace = await client.user.update({
         where: {
           clerkid: user.id,
-
         },
         data: {
           workspace: {
             create: {
-              name, type: 'PUBLIC'
-            }
-          }
-        }
-      })
-
+              name,
+              type: "PUBLIC",
+            },
+          },
+        },
+      });
 
       if (workspace) {
-        return { status: 200, data: 'Workspace Created' };
+        return { status: 200, data: "Workspace Created" };
       }
     }
-
 
     return {
       status: 403,
       data: null,
-      error: "You are not authorized to create a workspace"
-    }
-
+      error: "You are not authorized to create a workspace",
+    };
   } catch (error) {
     console.error("Error creating workspace:", error);
     return {
       status: 500,
       data: null,
-      error: error
+      error: error,
     };
   }
-}
-
-
+};
 
 export const renameFolders = async (folderId: string, name: string) => {
-
   try {
     const folder = await client.folder.update({
       where: {
-        id: folderId
+        id: folderId,
       },
       data: {
-        name: name
-      }
-    })
+        name: name,
+      },
+    });
 
     if (folder) {
       return {
         status: 200,
-        data: folder
-      }
+        data: folder,
+      };
     }
     return {
       status: 404,
       data: null,
-      error: "Folder not found"
-    }
+      error: "Folder not found",
+    };
   } catch (error) {
     return {
       status: 500,
       data: null,
-    }
+    };
   }
-}
-
-
-
+};
 
 export const createFolder = async (workspaceId: string) => {
   try {
     const isNewFolders = await client.workSpace.update({
       where: {
-        id: workspaceId
+        id: workspaceId,
       },
       data: {
         folders: {
           create: {
-            name: 'Untitled Folder'
-          }
-        }
-      }
-    })
+            name: "Untitled Folder",
+          },
+        },
+      },
+    });
 
     if (isNewFolders) {
       return {
         status: 200,
         message: "Folder created successfully",
-        data: isNewFolders
-      }
+        data: isNewFolders,
+      };
     }
 
     return {
       status: 404,
       message: "Failed to create folder",
-      data: null
-    }
+      data: null,
+    };
   } catch (error) {
-
     return {
       status: 500,
       message: "Internal server error",
-      data: null
-    }
+      data: null,
+    };
   }
-}
+};
 
 export const getFolderInfo = async (folderId: string) => {
   try {
     const folder = await client.folder.findUnique({
       where: {
-        id: folderId
+        id: folderId,
       },
       select: {
         name: true,
         _count: {
           select: {
-            videos: true
-          }
-        }
-      }
-    })
+            videos: true,
+          },
+        },
+      },
+    });
 
     if (folder) {
       return {
         status: 200,
-        data: folder
-      }
+        data: folder,
+      };
     }
 
     return {
       status: 404,
       data: null,
-      error: "Folder not found"
-    }
+      error: "Folder not found",
+    };
   } catch (error) {
     return {
       status: 500,
       data: null,
-      error: "Internal server error"
-    }
+      error: "Internal server error",
+    };
   }
-}
+};
 
-export const moveVideoLocation = async (folderId: string, videoId: string, workspaceId: string) => {
+export const moveVideoLocation = async (
+  folderId: string,
+  videoId: string,
+  workspaceId: string
+) => {
   try {
     const location = await client.video.update({
-      where:{
-        id: videoId
+      where: {
+        id: videoId,
       },
       data: {
-        folderId: folderId || null,
-        workSpaceId: workspaceId
-      
-      }
-    })
-  }catch(error){
-
+        folderId: folderId || undefined,
+        workSpaceId: workspaceId,
+      },
+    });
+    if (location) {
+      return {
+        status: 200,
+        data: location,
+      };
+    }
+    return {
+      status: 404,
+      data: null,
+      error: "Failed to move video location",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+      error: "Internal server error",
+    };
   }
-}
+};

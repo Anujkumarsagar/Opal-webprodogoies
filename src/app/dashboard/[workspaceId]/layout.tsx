@@ -52,7 +52,7 @@ const workspaceLayout = async ({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex">
         <Sidebar activeWorkspaceId={workspaceId} />
-        <div className=" w-full pt-28 p-6 overflow-y-scroll overflow-x-hidden ">
+        <div className=" w-full pt-28 p-6 overflow-y-scroll  ">
           <GlobalHeader workspace={hasAccess.data.workspace} />
           <div className="mt-4">
             {children}

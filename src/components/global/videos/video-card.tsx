@@ -7,6 +7,7 @@ import CardMenu from "./card-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserProfile } from "@clerk/nextjs";
 import { User } from "@clerk/nextjs/server";
+import { Dot, Share, User2 } from "lucide-react";
 
 
 
@@ -32,7 +33,7 @@ const VideoCard = (props: Props) => {
 
   const daysago = Math.floor(
     (new Date().getTime() - props.createdAt.getTime()) /
-      (24 * 60 * 60 * 60 * 100)
+    (24 * 60 * 60 * 60 * 100)
   );
   return (
     <Loader
@@ -63,21 +64,39 @@ const VideoCard = (props: Props) => {
             />
           </video>
           <div className="px-5 py-3 flex flex-col gap-x-2 z-20">
-            <h2 className="text-sm font-semibold text-[#BDBDBD] ">
+            <h2 className="text-sm font-semibold text-[#6d6b6b] ">
               {props.title}
             </h2>
-            <div className="flex gap-x-2 items-center">
-              <Avatar>
-                <AvatarImage className="mt-4"/>
+            <div className="flex gap-x-2 items-center mt-4">
+              <Avatar className="mt-2 w-8 h-8">
+                <AvatarImage src={props.User?.image as string} />
                 <AvatarFallback>
-                  
+                  <User2 />
                 </AvatarFallback>
               </Avatar>
+              <div>
+                <p className="capitalize text-[#6d6b6b] text-xs">
+                  {props.User?.firstname} {props.User?.lastname}
+                </p>
+                <p className="text-[#707070] text-xs flex items-center">
+                  <Dot /> {daysago === 0 ? "Today" : daysago + "d ago"}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <span className="flex gap-x-1 items-center">
+                <Share 
+                fill="#9D9D9D"
+                className="text-[#9D9D9D]"
+                size={12}
+                />
+                <p className="text-[#9D9D9D] text-xs capitalize" >{props.User?.firstname}'s Workspace</p>
+              </span>
             </div>
           </div>
         </Link>
       </div>
-    </Loader>
+    </Loader> 
   );
 };
 

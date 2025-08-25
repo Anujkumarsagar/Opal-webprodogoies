@@ -24,7 +24,6 @@ export default function Layout({ children }: Props) {
     return (
         <html lang="en">
             <body className={`${manrope.className}`}>
-                <ReduxProvider >
                     <ClerkProvider
                         publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
                         signInUrl="/auth/sign-in"
@@ -32,7 +31,8 @@ export default function Layout({ children }: Props) {
                         afterSignInUrl="/dashboard"
                         afterSignUpUrl="/dashboard"
                         afterSignOutUrl="/"
-                    >
+                        >
+                        <ReduxProvider>
                         <ThemeProvider
                             attribute="class"
                             defaultTheme="dark"
@@ -45,8 +45,8 @@ export default function Layout({ children }: Props) {
 
                             {/* hellow */}
                         </ThemeProvider>
-                    </ClerkProvider>
-                </ReduxProvider>
+                    </ReduxProvider>
+                </ClerkProvider>
             </body>
         </html>
     );

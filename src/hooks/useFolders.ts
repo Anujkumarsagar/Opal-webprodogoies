@@ -10,13 +10,13 @@ type FolderWithVideoCount = {
     id: string;
     name: string;
     createdAt: Date;
-    workspaceId: string;
+    workSpaceId: string | null;
     _count: {
         videos: number;
     };
 };
 
-export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
+export const useMoveVideos = (videoId: string, currentWorkspace: string ) => {
     // get state from redux
     // Typo fix: '=>' was missing in the arrow function.
     const { folders } = useAppSelector((state) => state.FolderReducer) // This seems unused within the hook, but may be used by the component.
@@ -31,21 +31,18 @@ export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
 
     // use mutation for optimistic updates when moving a video
     const { mutate, isPending } = useMutationData(
-        ['change-video-location', videoId], // More specific query key is better for cache invalidation.
-        (data: {
-            folder_id: string;
-            workspace_id: string;
-        }) =>
-            // The form provides `workspace_id`, which needs to be passed to the action.
-            moveVideoLocation(videoId, data.workspace_id, data.folder_id)
+        ['change-video-location', videoId],
+        (data: { folder_id?: string; workspace_id: string }) =>
+            // moveVideoLocation expects (folderId, videoId, workspaceId)
+            moveVideoLocation(data.folder_id || "", videoId, data.workspace_id)
     )
 
+    console.log("currentworkspace id", currentWorkspace)
     // Zod form setup
     const { errors, onFormSubmit, watch, register } = useZodForm(
         moveVideoSchema,
         mutate,
-        // It's good practice to ensure the schema handles `null` for folder_id if that's a possible state.
-        { folder_id: null, workspace_id: currentWorkspace }
+        { folder_id: undefined, workspace_id: currentWorkspace }
     )
 
     // Memoized function to fetch folders for a given workspace.

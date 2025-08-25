@@ -1,18 +1,22 @@
 import { redirect } from "next/navigation";
 import { onAuthenticateUser } from "../actions/user";
 
-export default async function DashboardPage() {
-    const auth = await onAuthenticateUser();
-    
-    if (auth.status === 200 || auth.status === 201) {
-        if (auth.user?.workspace && auth.user.workspace.length > 0) {
-            // Always redirect to the first workspace
-            return redirect(`/dashboard/${auth.user.workspace[0].id}`);
-        } else {
-            return redirect("/no-workspace");
-        }
-    }
+type Props = {
+  searchParams: {
+    redirect_url?: string;
+  };
+};
 
-    // If not authenticated, redirect to sign-in without any redirect_url
-    return redirect('/auth/sign-in');
+export default async function DashboardPage(props: Props) {
+  const auth = await onAuthenticateUser();
+
+  if (auth.status === 200 || auth.status === 201) {
+    if (auth.user?.workspace && auth.user.workspace.length > 0) {
+      // Always redirect to the first workspace
+      return redirect(`/dashboard/${auth.user.workspace[0].id}`);
+    }
+  }
+  if (auth.status === 400 || auth.status === 500 || auth.status === 404) {
+    return redirect("/auth/sign-in");
+  }
 }

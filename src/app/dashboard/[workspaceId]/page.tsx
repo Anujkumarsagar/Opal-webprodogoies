@@ -24,17 +24,17 @@ const Page = ({ params }: Props) => {
                     </TabsList>
                     <div className='flex gap-x-3'>
                         <CreateWorkspace  />
-                        <CreateFolder workspaceId={params.workspaceId} />
+                        <CreateFolder workspaceId={params.workspaceId as string} />
                     </div>
                 </div>
                 <section className='py-9'>
                     <TabsContent value='videos'>
-                        <Folders workspaceId={params.workspaceId} />
+                        <Folders workspaceId={params.workspaceId as string} />
                     </TabsContent>
                 </section>
             </Tabs>
         </div>
     )
-}
+};
 
 export default Page
