@@ -1,19 +1,20 @@
-import { MutationFunction, MutationKey, useMutation, useMutationState, useQueryClient } from "@tanstack/react-query";
-import { da } from "date-fns/locale";
+import { MutationFunction, MutationKey, UseMutateFunction, useMutation, useMutationState, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useMutationData = (mutationKey: MutationKey, mutationFn: MutationFunction<any, any>,
+export function useMutationData<TVariables, TResponse extends { status?: number; message?: string } = { status?: number; message?: string }>(
+    mutationKey: MutationKey,
+    mutationFn: MutationFunction<TResponse, TVariables>,
     queryKey?: string,
     onSuccess?: () => void
-) => {
+) {
 
     const client = useQueryClient();
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending } = useMutation<TResponse, unknown, TVariables>({
         mutationKey,
         mutationFn,
         onSuccess(data) {
             if (onSuccess) onSuccess();
-            return toast(data?.status === 200 ? "Success" : "Error", {
+            return toast(data?.status === 200 || data?.status === 201 ? "Success" : "Error", {
                 description: data?.message
             })
         },
@@ -24,7 +25,7 @@ export const useMutationData = (mutationKey: MutationKey, mutationFn: MutationFu
         },
     })
 
-    return { mutate, isPending }
+    return { mutate: mutate as UseMutateFunction<TResponse, unknown, TVariables, unknown>, isPending }
 }
 
 
@@ -42,7 +43,7 @@ export const useMutationDataState = (mutationKey: MutationKey) => {
         },
         select: (mutation) => {
             return {
-                variables: mutation.state.variables as any,
+                variables: mutation.state.variables as unknown,
                 status: mutation.state.status,
             }
         }

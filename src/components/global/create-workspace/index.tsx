@@ -9,24 +9,15 @@ import { Button } from '@/components/ui/button'
 import { FolderPlusIcon } from 'lucide-react'
 import WorkspaceForm from '@/components/form/workspace-form'
 
-type Props = {}
+const CreateWorkspace = () => {
+    const { data } = useQueryData(["user-workspaces"], getWorkSpaces)
 
-const CreateWorkspace = (props: Props) => {
-    const {data} = useQueryData(["user-workspaces"],getWorkSpaces)
+    const plan = (data as { status: number; data: Array<{ subscription: { plan: 'PRO' | 'FREE' } | null }> } | undefined)?.data?.[0]?.subscription?.plan ?? null
 
-    const {data: plan} = data as {
-        status: number
-        data:{
-            subscription:{
-                plan: 'PRO' | 'FREE'
-            } | null
-        }
-    }
-
-    if(plan.subscription?.plan === 'FREE'){
+    if (plan !== 'PRO') {
         return <></>
     }
-  if (plan.subscription?.plan === 'PRO')  return (
+  return (
     <Modal
     title="Create a Workspace"
     description='Workspaces helps you collaborae with team members. You are assigned a default personal workspace where you can share videos in private with yourself'

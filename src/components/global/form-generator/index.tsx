@@ -2,22 +2,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import React from 'react'
 import { ErrorMessage } from "@hookform/error-message"
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import { Textarea } from '@/components/ui/textarea';
 
-type Props = {
+type Props<T extends FieldValues> = {
     type?: 'text' | 'email' | 'password' | 'number'
     inputType: 'select' | 'input' | 'textarea'
     option?: { value: string; label: string; id: string }[]
     label?: string
     placeholder: string
-    register: UseFormRegister<any>
-    name: string
-    errors: FieldErrors<FieldValues>
+    register: UseFormRegister<T>
+    name: Path<T>
+    errors: FieldErrors<T>
     lines?: number
 }
 
-const FormGenerator = ({
+const FormGenerator = <T extends FieldValues,>({
     type,
     errors,
     inputType,
@@ -27,7 +27,7 @@ const FormGenerator = ({
     label,
     lines,
     option
-}: Props) => {
+}: Props<T>) => {
     switch (inputType) {
         case 'input':
             return (
@@ -44,7 +44,7 @@ const FormGenerator = ({
                     />
                     <ErrorMessage
                         errors={errors}
-                        name={name}
+                        name={name as unknown as never}
                         render={({ message }) => (
                             <p className='text-red-400 mt-2'>{message === 'Required' ? '' : message}</p>
                         )}
@@ -83,7 +83,7 @@ const FormGenerator = ({
 
                     <ErrorMessage
                         errors={errors}
-                        name={name}
+                        name={name as unknown as never}
                         render={({ message }) => (
                             <p className='text-red-400 mt-2'>{message === 'Required' ? '' : message}</p>
                         )}
@@ -106,7 +106,7 @@ const FormGenerator = ({
                     />
                     <ErrorMessage
                         errors={errors}
-                        name={name}
+                        name={name as unknown as never}
                         render={({ message }) => (
                             <p className='text-red-400 mt-2'>{message === 'Required' ? '' : message}</p>
                         )}

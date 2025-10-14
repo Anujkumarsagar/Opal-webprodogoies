@@ -51,7 +51,7 @@ const VideoCard = (props: Props) => {
           <CopyLink className="p-[5px] h-5 bg-[#252525] hover:bg-transparent" videoId={props.id} />
         </div>
         <Link
-          href={`/preview/${props.id}`}
+          href={`/dashboard/${props.workspaceId}/video/${props.id}`}
           className="hover:bg-[#252525] transtition duration-150 flex flex-col justify-between h-full"
         >
           <video

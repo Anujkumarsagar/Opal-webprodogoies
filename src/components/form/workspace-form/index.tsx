@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button'
 import { useCreateWorkspace } from '@/hooks/useCreateWorkspace'
 import React from 'react'
 
-type Props = {}
-
-const WorkspaceForm = (props: Props) => {
+const WorkspaceForm = () => {
   const { errors, isPending, onFormSubmit, register } = useCreateWorkspace()
   return (
     <form onSubmit={onFormSubmit} className='flex flex-col gap-y-3'>
 
-      <FormGenerator name='name' placeholder="Workspace Name"
+      <FormGenerator<{ name: string }>
+        name={'name'}
+        placeholder="Workspace Name"
         label='Name'
         errors={errors}
         inputType='input'

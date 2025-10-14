@@ -8,6 +8,8 @@ import { User, UserCircle } from 'lucide-react'
 import React from 'react'
 import { deflate } from 'zlib'
 import Loader from '../loader'
+import { useMutationData } from '@/hooks/useMutationData'
+import { inviteMembers } from '@/app/actions/user'
 
 type Props = {
   workspaceId: string
@@ -17,13 +19,11 @@ const Search = ({ workspaceId }: Props) => {
   const { query, onSearchQuery, isFetching, onUsers } = useSearch('get-workspace', 'USERS')
 
   //WIP: Wire up sending invitation
-  // const { mutate, isPending } = useMutationData(['invite-member'],
-  //   (data: {
-  //     recieverId: string; email: string
-  //   }) => {
-
-  //   }
-  // )
+  const { mutate, isPending } = useMutationData(['invite-member'],
+    (data: {
+      recieverId: string; email: string; workspaceId: string
+    }) => inviteMembers(data.workspaceId, data.recieverId, data.email)
+  )
 
 
   return (
@@ -60,9 +60,15 @@ const Search = ({ workspaceId }: Props) => {
                   </p>
                 </div>
                 <div className='flex-1 flex justify-end items-center'>
-                  <Button onClick={() => { }} variant={"default"}
+                  <Button onClick={() => {
+                    mutate({
+                      recieverId: user.id,
+                      email: user.email as string,
+                      workspaceId: workspaceId
+                    })
+                  }} variant={"default"}
                     className='w-5/12 font-bold'>
-                    <Loader state={false} color='#000'>Invite</Loader>
+                    <Loader state={isPending} color='#000'>Invite</Loader>
                   </Button>
                 </div>
 

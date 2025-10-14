@@ -1,3 +1,5 @@
+"use client"
+
 import CreateFolder from '@/components/global/create-folder'
 import CreateWorkspace from '@/components/global/create-workspace'
 import Folders from '@/components/global/folders'
@@ -14,7 +16,7 @@ const Page = ({ params }: Props) => {
         <div>
             <Tabs className='mt-6'
                 defaultValue='videos'>
-                <div className=' flex w-full justify-between items-center '>
+                <div className=' flex w-full justify-between md:justify-start  items-center '>
                     <TabsList className='bg-transparent gap-2 pl-0'>
 
                         <TabsTrigger value="videos" className='px-6 rounded-full data-[state=active]:bg-[#252525]'>

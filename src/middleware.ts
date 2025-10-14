@@ -15,15 +15,19 @@ export default clerkMiddleware(async (auth, req) => {
     const session = await auth();
     if (session?.userId) {
       const callbackUrl = new URL("/auth/callback", req.url);
-      // preserve redirect_url if present
+
       const current = new URL(req.url);
       const redirectParam = current.searchParams.get("redirect_url");
-      if (redirectParam) {
+
+      if (redirectParam?.startsWith("/dashboard/")) {
         callbackUrl.searchParams.set("redirect_url", redirectParam);
       }
+
       return NextResponse.redirect(callbackUrl);
     }
   }
+
+
   if (isProtectedRoute(req)) {
     await auth.protect()
   }
@@ -32,7 +36,7 @@ export default clerkMiddleware(async (auth, req) => {
 
 
 export const config = {
-  matcher:[
+  matcher: [
     '/dashboard/:path*',
     '/payment/:path*',
     '/api/payment',

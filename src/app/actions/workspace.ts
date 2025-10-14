@@ -1,8 +1,11 @@
 "use server";
+"use server";
 
 import { client } from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { stat } from "fs";
+import { a } from "node_modules/framer-motion/dist/types.d-Cjd591yU";
+import { sendEmail } from "./user";
 
 export async function verifyAccessToWorkspace(workspaceId: string) {
   try {
@@ -212,15 +215,19 @@ export const CreateWorkspace = async (name: string) => {
         clerkid: user.id,
       },
       select: {
+        id: true,
         subscription: {
           select: {
+            id: true,
             plan: true,
           },
         },
       },
     });
 
-    if (authorized?.subscription?.plan !== "PRO") {
+    console.log("authorized in create workspace: ", authorized)
+
+    if (authorized?.subscription?.plan === "PRO") {
       const workspace = await client.user.update({
         where: {
           clerkid: user.id,
@@ -234,6 +241,8 @@ export const CreateWorkspace = async (name: string) => {
           },
         },
       });
+
+      console.log("Workspace Created: ", workspace)
 
       if (workspace) {
         return { status: 200, data: "Workspace Created" };
@@ -393,3 +402,152 @@ export const moveVideoLocation = async (
     };
   }
 };
+
+
+
+
+export const getPreviewVideo = async (videoId: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403, data: null }
+    const video = await client.video.findUnique({
+      where: {
+        id: videoId
+      },
+      select: {
+        title: true,
+        createdAt: true,
+        source: true,
+        processing: true,
+        description: true,
+        views: true,
+        summary: true,
+        User: {
+          select: {
+            firstname: true,
+            lastname: true,
+            image: true,
+            clerkid: true,
+            subscription: {
+              select: {
+                plan: true,
+              },
+            },
+            trial: true
+          }
+        },
+      }
+    })
+
+    if (video) {
+      return {
+        status: 200,
+        data: video,
+        author: user.id === video.User?.clerkid ? true : false
+      }
+    }
+    return {
+      status: 404,
+      data: null,
+      author: false,
+      error: "Video not found"
+    }
+  } catch (error) {
+    return {
+      status: 500,
+      data: null,
+      error: error
+    }
+
+  }
+}
+
+
+
+
+
+export const sendEmailForFirstView = async (videoId: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    const firstViewSettings = await client.user.findUnique(
+      {
+        where: {
+          clerkid: user.id
+        },
+        select: {
+          firstView: true
+        }
+      }
+    )
+
+    if (!firstViewSettings?.firstView) {
+      return
+    }
+
+    const video = await client.video.findUnique({
+      where: {
+        id: videoId
+      },
+      select: {
+        title: true,
+        views: true,
+        User: {
+          select: {
+            email: true,
+          },
+        },
+      }
+    })
+
+    if (video && video.views === 0) {
+      await client.video.update({
+        where: {
+          id: videoId
+        },
+        data: {
+          views: video.views + 1
+        }
+      })
+    }
+
+    const { transporter, mailOptions } = await sendEmail(
+      video?.User?.email as string,
+      "Your video got its first view!",
+      `<p>Your video titled "${video?.title}" has just received its first view! 🎉</p>
+      <p>Thank you for sharing your content with us.</p>
+      <p>Best regards,<br/>The Team</p>`
+    )
+
+    transporter.sendMail(mailOptions, async function (error, info) {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        const notification = await client.user.update({
+          where: {
+            clerkid: user.id
+          },
+          data: {
+            notificaion: {
+              create: {
+                content: mailOptions.text as string
+              }
+            }
+          }
+
+        })
+
+        if (notification) {
+          return {
+            status: 200,
+            data: { notification }
+          }
+        }
+      }
+    })
+  } catch (error) {
+    console.log(error)
+
+  }
+}

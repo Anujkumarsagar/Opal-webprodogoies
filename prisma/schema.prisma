@@ -22,7 +22,6 @@ model User {
   lastname     String?
   clerkid      String        @unique
   image        String?
-  trial        Boolean       @default(false)
   workspace    WorkSpace[]
   videos       Video[]
   members      Member[]
@@ -30,9 +29,27 @@ model User {
   notificaion  Notificaion[]
   sender       Invite[]      @relation("sender")
   reciever     Invite[]      @relation("reciever")
+  trial        Boolean       @default(false)
+  firstView    Boolean       @default(false)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   Invite       Invite[]
+  comment      Comment[]
+}
+
+model Comment {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  comment   String
+  createdAt DateTime  @default(now())
+  reply     Comment[] @relation("reply")
+  Comment   Comment?  @relation("reply", fields: [commentId], references: [id])
+
+  userId    String? @db.Uuid
+  commentId String? @db.Uuid
+  videoId   String? @db.Uuid
+
+  User  User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Video Video? @relation(fields: [videoId], references: [id], onDelete: Cascade)
 }
 
 enum PRESET {
@@ -110,6 +127,8 @@ model Video {
   processing Boolean @default(true)
   views      Int     @default(0)
   summary    String?
+
+  comment Comment[]
 }
 
 model Member {

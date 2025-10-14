@@ -1,3 +1,5 @@
+"use client"
+
 import { redirect } from "next/navigation";
 import { onAuthenticateUser } from "../actions/user";
 
@@ -10,9 +12,10 @@ type Props = {
 export default async function DashboardPage(props: Props) {
   const auth = await onAuthenticateUser();
 
+  console.log("Auth ", auth)
+
   if (auth.status === 200 || auth.status === 201) {
     if (auth.user?.workspace && auth.user.workspace.length > 0) {
-      // Always redirect to the first workspace
       return redirect(`/dashboard/${auth.user.workspace[0].id}`);
     }
   }

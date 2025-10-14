@@ -30,6 +30,7 @@ import InfoBar from "../info-bar";
 import { useQueryData } from "@/hooks/userQueryData";
 import { useDispatch } from "react-redux";
 import { WORKSPACES } from "@/redux/slices/workspaces";
+import PaymentButton from "../payment-button";
 
 type Props = {
     activeWorkspaceId: string;
@@ -76,10 +77,10 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         router.push(`/dashboard/${value}`);
     };
 
-    if(isFetched && workspace){
-        dispatch(WORKSPACES({workspaces: workspace.workspace}))
+    if (isFetched && workspace) {
+        dispatch(WORKSPACES({ workspaces: workspace.workspace }))
     }
-    
+
 
     if (!isFetched) {
         return (
@@ -221,16 +222,21 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
                 </ul>
             </nav>
             <Separator className="w-4/5" />
-            {workspace.subscription?.plan === 'FREE' && <GlobalCard
+            {workspace.subscription?.plan === 'FREE' &&
+                <GlobalCard
 
-                title="Upgrade to Pro"
-                description="Unlock AI features like transcription  AI summary, and more."
-            >
-
+                    title="Upgrade to Pro"
+                    description="Unlock AI features like transcription  AI summary, and more."
+                    // footer={}
+                >
+                    <PaymentButton />
+                </GlobalCard>
+            }
+            {/* 
                 <Button className="tex-sm w-full mx-auto mt-2">
                     <Loader className="#000" state={false}> Ugrade </Loader>
                 </Button>
-            </GlobalCard>}
+            </GlobalCard>} */}
         </div>
     );
 
@@ -238,7 +244,7 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
         <div>
             <InfoBar />
             {/* Mobile View */}
-            <div className="md:hidden fixed top-4 left-4 z-50">
+            <div className="md:hidden overflow-y-scroll fixed top-4 left-4 z-50">
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button

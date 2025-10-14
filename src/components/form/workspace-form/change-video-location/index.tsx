@@ -87,7 +87,7 @@ const ChangeVideoLocation = ({
                       value={folder.id as string}
                       selected
                     >
-                      {folder.name}
+                      {folder.name} 
                     </option>
                   ) : (
                     <option

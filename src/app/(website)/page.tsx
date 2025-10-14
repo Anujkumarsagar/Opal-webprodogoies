@@ -12,7 +12,7 @@ import { AnimatedSection } from "../../components/pages/landing/animated-section
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden pb-0">
+    <div className="min-h-screen bg-background relative  pb-0">
       <div className="relative z-10">
         <main className="max-w-[1320px] mx-auto relative">
           <HeroSection />
