@@ -1,11 +1,11 @@
 "use client"
 
 import { getNotification } from '@/app/actions/user'
-import { Loader } from '@/components/global/loader'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useQueryData } from '@/hooks/userQueryData'
 import { UserButton } from '@clerk/nextjs'
 import React from 'react'
+import Loader from '../../../../components/global/loader'
 
 const Notifications = () => {
     const { data: notifications, isPending } = useQueryData(
@@ -16,7 +16,7 @@ const Notifications = () => {
     if (isPending) {
         return (
             <div className="flex items-center justify-center h-full">
-                <Loader />
+                <Loader  state={isPending} />
             </div>
         )
     }
