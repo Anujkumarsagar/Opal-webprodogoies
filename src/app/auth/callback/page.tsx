@@ -13,7 +13,7 @@ export default async function CallbackPage({ searchParams }: Props) {
   }
 
   if ([200, 201].includes(auth.status)) {
-    const urlParam = searchParams?.redirect_url;
+    const urlParam = await searchParams?.redirect_url;
 
     // Redirect to requested dashboard if safe
     if (urlParam?.startsWith("/dashboard/")) {

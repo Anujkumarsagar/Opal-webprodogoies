@@ -1,45 +1,54 @@
+"use client"
+
 import { getNotification } from '@/app/actions/user'
+import { Loader } from '@/components/global/loader'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useQueryData } from '@/hooks/userQueryData'
-import { User } from '@clerk/nextjs/server'
+import { UserButton } from '@clerk/nextjs'
 import React from 'react'
 
-type Props = {}
-
-const Notifications = async (props: Props) => {
-    const { data: notifications } = useQueryData(
+const Notifications = () => {
+    const { data: notifications, isPending } = useQueryData(
         ['notifications'],
-        getNotification
+        getNotification,
     )
 
-    const { data: notification, status } = notifications as {
-        status: number
-        data: {
-            notifications: {
-                id: string
-                userId: string | null
-                content: string
-            }[]
-        }
+    if (isPending) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <Loader />
+            </div>
+        )
     }
 
-    if(status != 200){
-        return <div className='text-red-500 text-center flex justify-self-center items-center h-full w-full'>Something went wrong</div>
+    if (notifications?.status !== 200) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className='text-red-500 text-center'>Something went wrong</div>
+            </div>
+        )
     }
-    return <div>
-        {
-            notification.notifications.map((notification) => (
-                <div key={notification.id} className='flex items-center gap-4 rounded-lg p-3 border-2 '>
-                    <Avatar>
-                        <AvatarFallback>
-                            <User />
-                        </AvatarFallback>
-                    </Avatar>
+
+    const notificationList = notifications.data?.notifications;
+
+    if (!notificationList || notificationList.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <p className="text-muted-foreground">You have no notifications.</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="flex flex-col gap-y-4">
+            {notificationList.map((notification) => (
+                <div key={notification.id} className='flex items-center gap-4 rounded-lg p-3 border-2'>
+                    <Avatar><AvatarFallback><UserButton /></AvatarFallback></Avatar>
                     <p>{notification.content}</p>
                 </div>
-            ))
-        }
-    </div>
+            ))}
+        </div>
+    )
 }
 
 export default Notifications

@@ -1,46 +1,61 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+// import type { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/api/payment',
-  '/payment(.*)',
-])
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+const crosOptions = {
+  'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
+const isProtectedRoute = createRouteMatcher(
+  ["/dashboard(.*)",
+    "/payment(.*)",]
+);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { pathname } = req.nextUrl;
+  const origin = req.headers.get('origin') ?? '';
+  const isAllowedOrigin = allowedOrigins.includes(origin);
 
-  // If user hits auth pages and is already signed in, send them to callback, preserving redirect_url
-  if (pathname === "/auth/sign-in" || pathname === "/auth/sign-up") {
-    const session = await auth();
-    if (session?.userId) {
-      const callbackUrl = new URL("/auth/callback", req.url);
-
-      const current = new URL(req.url);
-      const redirectParam = current.searchParams.get("redirect_url");
-
-      if (redirectParam?.startsWith("/dashboard/")) {
-        callbackUrl.searchParams.set("redirect_url", redirectParam);
-      }
-
-      return NextResponse.redirect(callbackUrl);
+  if (req.method == 'OPTIONS') {
+    const preflightHeaders = {
+      ...(isAllowedOrigin && {
+        'Access-Control-Allow-Origin': origin
+      }),
+      ...crosOptions
     }
+    return NextResponse.json({}, {
+      headers: preflightHeaders
+    });
   }
-
 
   if (isProtectedRoute(req)) {
-    await auth.protect()
+    auth.protect();
   }
-})
 
+  const response = NextResponse.next();
+
+  if (isAllowedOrigin) {
+    response.headers.set('Access-Control-Allow-Origin', origin);
+  }
+
+  Object.entries(crosOptions).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+
+  return response;
+
+});
 
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/payment/:path*',
-    '/api/payment',
-    '/auth/:path*',
-    '/(api|trpc)(.*)'
-  ]
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
+
 }

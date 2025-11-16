@@ -124,16 +124,16 @@ export const getNotification = async () => {
         const notification = await client.user.findUnique({
             where: { clerkid: user.id },
             select: {
-                notification: true,
-                _count: { select: { notification: true } }
+                notificaion: true,
+                _count: { select: { notificaion: true } }
             }
         });
 
         return {
             status: 200,
             data: {
-                notifications: notification?.notification || [],
-                count: notification?._count?.notification || 0
+                notifications: notification?.notificaion || [],
+                count: notification?._count?.notificaion || 0
             }
         };
     } catch (error) {
