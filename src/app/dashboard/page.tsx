@@ -1,5 +1,3 @@
-"use client"
-
 import { redirect } from "next/navigation";
 import { onAuthenticateUser } from "../actions/user";
 
